@@ -14,14 +14,9 @@ import javax.swing.*;
  */
 public class BinarySearchTree {
 
-    class drawing extends JPanel {
-
-//        @Override
-//        protected void paintComponent(Graphics g) {
-//            super.paintComponent(g);
-//            g.fillRect(getWidth()/2, 10, 20, 20);
-//        }
-    }
+    static JFrame f = new JFrame();
+    static int x = f.getWidth() / 2;
+    static int y = 50;
 
     public static Node root;
 
@@ -127,6 +122,9 @@ public class BinarySearchTree {
         Node newNode = new Node(id);
         if (root == null) {
             root = newNode;
+            newNode.Nx = f.getWidth() / 2;
+            newNode.Ny = y;
+            f.add(new Circle(root.Nx, root.Ny, root.data));
             return;
         }
         Node current = root;
@@ -137,12 +135,18 @@ public class BinarySearchTree {
                 current = current.left;
                 if (current == null) {
                     parent.left = newNode;
+                    newNode.Nx = parent.Nx - 50;
+                    newNode.Ny = parent.Ny + 50;
+                    f.add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
                     return;
                 }
             } else {
                 current = current.right;
                 if (current == null) {
                     parent.right = newNode;
+                    newNode.Nx = parent.Nx + 50;
+                    newNode.Ny = parent.Ny + 50;
+                    f.add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
                     return;
                 }
             }
@@ -160,6 +164,19 @@ public class BinarySearchTree {
     }
 
     public static void main(String arg[]) {
+
+        f.setSize(1000, 1000);
+        f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JTextField number = new JTextField(20);
+        JButton insert = new JButton("Insert Value");
+        JPanel addno = new JPanel();
+        addno.add(number);
+        addno.add(insert);
+        f.add(addno,BorderLayout.PAGE_END);
+        
+//        f.setLayout(new FlowLayout());
+
         BinarySearchTree b = new BinarySearchTree();
         b.insert(3);
         b.insert(8);
@@ -184,11 +201,13 @@ public class BinarySearchTree {
         System.out.println("\n Delete Node with Two children (10) : " + b.delete(10));
         b.display(root);
     }
+
 }
 
 class Node {
 
     int data;
+    int Nx, Ny;
     Node left;
     Node right;
 
@@ -196,5 +215,26 @@ class Node {
         this.data = data;
         left = null;
         right = null;
+    }
+}
+
+class Circle extends JPanel {
+
+    int x, y, data;
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.green);
+        g.fillOval(this.x, this.y, 50, 50);
+        g.setColor(Color.BLACK);
+        g.drawString(data + "", this.x + 25, this.y + 25);
+    }
+
+    Circle(int x, int y, int data) {
+        this.x = x;
+        this.y = y;
+        this.data = data;
+        repaint();
     }
 }
