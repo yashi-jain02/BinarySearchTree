@@ -170,7 +170,6 @@ public class BinarySearchTree {
 		b.display(root);
 		System.out.println("\n Delete Node with Two children (10) : " + b.delete(10));		
 		b.display(root);
-                System.out.println("hello hello");
 	}
 }
 
