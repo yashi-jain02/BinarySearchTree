@@ -14,14 +14,20 @@ import javax.swing.*;
  */
 public class BinarySearchTree {
 
-    static JFrame f = new JFrame();
-    static int x = f.getWidth() / 2;
-    static int y = 50;
+//    int x = getWidth() / 2;
+//    int y = 50;
+
+    JTextField number = new JTextField(20);
+    JButton insert = new JButton("Insert Value");
+    JPanel addno = new JPanel();
+    JFrame f;
 
     public static Node root;
 
     public BinarySearchTree() {
         this.root = null;
+
+//        add(addno, BorderLayout.PAGE_END);
     }
 
     public boolean find(int id) {
@@ -122,9 +128,9 @@ public class BinarySearchTree {
         Node newNode = new Node(id);
         if (root == null) {
             root = newNode;
-            newNode.Nx = f.getWidth() / 2;
-            newNode.Ny = y;
-            f.add(new Circle(root.Nx, root.Ny, root.data));
+//            newNode.Nx = getWidth() / 2;
+//            newNode.Ny = y;
+//            f.add(new Circle(root.Nx, root.Ny, root.data));
             return;
         }
         Node current = root;
@@ -137,7 +143,7 @@ public class BinarySearchTree {
                     parent.left = newNode;
                     newNode.Nx = parent.Nx - 50;
                     newNode.Ny = parent.Ny + 50;
-                    f.add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
+//                    f.add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
                     return;
                 }
             } else {
@@ -146,7 +152,7 @@ public class BinarySearchTree {
                     parent.right = newNode;
                     newNode.Nx = parent.Nx + 50;
                     newNode.Ny = parent.Ny + 50;
-                    f.add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
+//                    add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
                     return;
                 }
             }
@@ -163,43 +169,46 @@ public class BinarySearchTree {
         }
     }
 
-    public static void main(String arg[]) {
+    void initialize() {
+        addno.add(number);
+        addno.add(insert);
+        f.add(addno);
+    }
 
+    public void start() {
+        f = new JFrame("Binary Search Tree");
         f.setSize(1000, 1000);
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JTextField number = new JTextField(20);
-        JButton insert = new JButton("Insert Value");
-        JPanel addno = new JPanel();
-        addno.add(number);
-        addno.add(insert);
-        f.add(addno,BorderLayout.PAGE_END);
-        
-//        f.setLayout(new FlowLayout());
-
+        f.setLayout(new FlowLayout());
         BinarySearchTree b = new BinarySearchTree();
-        b.insert(3);
-        b.insert(8);
-        b.insert(1);
-        b.insert(4);
-        b.insert(6);
-        b.insert(2);
-        b.insert(10);
-        b.insert(9);
-        b.insert(20);
-        b.insert(25);
-        b.insert(15);
-        b.insert(16);
-        System.out.println("Original Tree : ");
-        b.display(b.root);
-        System.out.println("");
-        System.out.println("Check whether Node with value 4 exists : " + b.find(4));
-        System.out.println("Delete Node with no children (2) : " + b.delete(2));
-        b.display(root);
-        System.out.println("\n Delete Node with one child (4) : " + b.delete(4));
-        b.display(root);
-        System.out.println("\n Delete Node with Two children (10) : " + b.delete(10));
-        b.display(root);
+        f.add(new drawStuff());
+    }
+
+    public static void main(String arg[]) {
+
+//        b.insert(3);
+//        b.insert(8);
+//        b.insert(1);
+//        b.insert(4);
+//        b.insert(6);
+//        b.insert(2);
+//        b.insert(10);
+//        b.insert(9);
+//        b.insert(20);
+//        b.insert(25);
+//        b.insert(15);
+//        b.insert(16);
+//        System.out.println("Original Tree : ");
+//        b.display(b.root);
+//        System.out.println("");
+//        System.out.println("Check whether Node with value 4 exists : " + b.find(4));
+//        System.out.println("Delete Node with no children (2) : " + b.delete(2));
+//        b.display(root);
+//        System.out.println("\n Delete Node with one child (4) : " + b.delete(4));
+//        b.display(root);
+//        System.out.println("\n Delete Node with Two children (10) : " + b.delete(10));
+//        b.display(root);
     }
 
 }
@@ -218,23 +227,10 @@ class Node {
     }
 }
 
-class Circle extends JPanel {
-
-    int x, y, data;
+class drawStuff extends JPanel {
 
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.setColor(Color.green);
-        g.fillOval(this.x, this.y, 50, 50);
-        g.setColor(Color.BLACK);
-        g.drawString(data + "", this.x + 25, this.y + 25);
-    }
-
-    Circle(int x, int y, int data) {
-        this.x = x;
-        this.y = y;
-        this.data = data;
-        repaint();
+    public void paintComponents(Graphics g) {
+        g.fillRect(0, 0, 500, 500);
     }
 }
