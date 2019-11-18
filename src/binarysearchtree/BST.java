@@ -39,6 +39,7 @@ public class BST extends JPanel {
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(this, BorderLayout.CENTER);
+        f.add(bottom, BorderLayout.PAGE_END);
     }
 
     void listener() {
