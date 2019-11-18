@@ -9,6 +9,8 @@ import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.*;
 import javax.swing.*;
 
@@ -40,16 +42,26 @@ public class BST extends JPanel {
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(this, BorderLayout.CENTER);
         f.add(bottom, BorderLayout.PAGE_END);
-    }
 
-    void listener() {
-        ADD.addActionListener(new ActionListener() {
+//        ADD.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent ae) {
+//                int val = Integer.parseInt(field.getText());
+//                root.add(val);
+//                repaint();
+//            }
+//        });
+
+        field.addKeyListener(new KeyAdapter() {
             @Override
-            public void actionPerformed(ActionEvent ae) {
-                int val = Integer.parseInt(field.getText());
-                root.add(val);
-                repaint();
+            public void keyPressed(KeyEvent ke) {
+                if(ke.getKeyCode()==10){
+                    root.add(Integer.parseInt(field.getText()));
+                    System.out.println("Enter");
+                    repaint();
+                }
             }
+
         });
     }
 
@@ -58,11 +70,19 @@ public class BST extends JPanel {
         int x = 100, y = 100;
         Iterator i = root.iterator();
         while (i.hasNext()) {
-            g.drawString(i.toString(), x, y);
+            g.drawString(i.next().toString(), x, y);
+//System.out.println(i.next()+ " ");
             x += 20;
             y += 20;
         }
 
     }
+    
+//    void preorder(Iterator i){
+//        if(i!=null){
+//            preorder(i.next());
+//        }
+//        
+//    }
 
 }
