@@ -6,6 +6,8 @@
 package binarysearchtree;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
@@ -13,10 +15,11 @@ import javax.swing.*;
  * @author Bhavya Jain
  */
 public class BinarySearchTree {
-
-//    int x = getWidth() / 2;
-//    int y = 50;
-
+    
+    //coordinates of currently processing node
+    int x,y;
+    
+    //component declaration
     JTextField number = new JTextField(20);
     JButton insert = new JButton("Insert Value");
     JPanel addno = new JPanel();
@@ -26,6 +29,30 @@ public class BinarySearchTree {
 
     public BinarySearchTree() {
         this.root = null;
+
+        //Initialise components and panels
+        drawStuff canvas = new drawStuff();
+        canvas.setPreferredSize(new Dimension(1000, 1000));
+        f = new JFrame();
+        f.setLayout(new FlowLayout());
+        addno.add(number);
+        addno.add(insert);
+        f.add(canvas);
+        f.add(addno);
+        
+        //Listeners
+        insert.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                number.getText();
+            }
+        });
+        
+        
+        //frame settings
+        f.pack();
+        f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 //        add(addno, BorderLayout.PAGE_END);
     }
@@ -169,23 +196,21 @@ public class BinarySearchTree {
         }
     }
 
-    void initialize() {
-        addno.add(number);
-        addno.add(insert);
-        f.add(addno);
-    }
-
-    public void start() {
-        f = new JFrame("Binary Search Tree");
-        f.setSize(1000, 1000);
-        f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setLayout(new FlowLayout());
-        BinarySearchTree b = new BinarySearchTree();
-        f.add(new drawStuff());
-    }
-
+//    void initialize() {
+//        addno.add(number);
+//        addno.add(insert);
+//        f.add(addno);
+//    }
+//    public void start() {
+//        f = new JFrame("Binary Search Tree");
+//        
+//        f.setLayout(new FlowLayout());
+//        BinarySearchTree b = new BinarySearchTree();
+//        f.add(new drawStuff());
+//    }
     public static void main(String arg[]) {
+        
+        new BinarySearchTree();
 
 //        b.insert(3);
 //        b.insert(8);
@@ -230,7 +255,7 @@ class Node {
 class drawStuff extends JPanel {
 
     @Override
-    public void paintComponents(Graphics g) {
-        g.fillRect(0, 0, 500, 500);
+    public void paintComponent(Graphics g) {
+        
     }
 }
