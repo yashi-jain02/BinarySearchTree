@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import java.util.*;
 
 /**
  *
@@ -16,9 +17,11 @@ import javax.swing.*;
  */
 public class BinarySearchTree {
     
+    static BinarySearchTree b;
+
     //coordinates of currently processing node
-    int x,y;
-    
+    public int xcoord = 500, ycoord = 10;
+
     //component declaration
     JTextField number = new JTextField(20);
     JButton insert = new JButton("Insert Value");
@@ -39,16 +42,17 @@ public class BinarySearchTree {
         addno.add(insert);
         f.add(canvas);
         f.add(addno);
-        
+
         //Listeners
         insert.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                number.getText();
+                b.insert(Integer.parseInt(number.getText()));
+                canvas.rootset(root);
+                canvas.repaint();
             }
         });
-        
-        
+
         //frame settings
         f.pack();
         f.setVisible(true);
@@ -155,6 +159,8 @@ public class BinarySearchTree {
         Node newNode = new Node(id);
         if (root == null) {
             root = newNode;
+            root.Nx = 500;
+            root.Ny = 10;
 //            newNode.Nx = getWidth() / 2;
 //            newNode.Ny = y;
 //            f.add(new Circle(root.Nx, root.Ny, root.data));
@@ -169,7 +175,7 @@ public class BinarySearchTree {
                 if (current == null) {
                     parent.left = newNode;
                     newNode.Nx = parent.Nx - 50;
-                    newNode.Ny = parent.Ny + 50;
+                    newNode.Ny = parent.Ny + 20;
 //                    f.add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
                     return;
                 }
@@ -178,7 +184,7 @@ public class BinarySearchTree {
                 if (current == null) {
                     parent.right = newNode;
                     newNode.Nx = parent.Nx + 50;
-                    newNode.Ny = parent.Ny + 50;
+                    newNode.Ny = parent.Ny + 20;
 //                    add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
                     return;
                 }
@@ -209,8 +215,8 @@ public class BinarySearchTree {
 //        f.add(new drawStuff());
 //    }
     public static void main(String arg[]) {
-        
-        new BinarySearchTree();
+
+        b = new BinarySearchTree();
 
 //        b.insert(3);
 //        b.insert(8);
@@ -254,8 +260,31 @@ class Node {
 
 class drawStuff extends JPanel {
 
+    Node drawroot;
+    Stack<Node> nodestack = new Stack<Node>();
+
+    void rootset(Node root) {
+        drawroot = root;
+        nodestack.push(drawroot);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
-        
+        System.out.println("Hello");
+        while (nodestack.isEmpty() == false) {
+            //print the number on screen
+            Node mynode = nodestack.peek();
+            g.drawString(Integer.toString(mynode.data), mynode.Nx, mynode.Ny);
+            nodestack.pop();
+
+            if (mynode.right != null) {
+                nodestack.push(mynode.right);
+                
+            }
+            
+            if (mynode.left != null) {
+                nodestack.push(mynode.left);
+            }
+        }
     }
 }
