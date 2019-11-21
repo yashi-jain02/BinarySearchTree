@@ -8,6 +8,8 @@ package binarysearchtree;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.*;
 import java.util.*;
 
@@ -16,15 +18,20 @@ import java.util.*;
  * @author Bhavya Jain
  */
 public class BinarySearchTree {
-    
+
     static BinarySearchTree b;
+    public boolean found = false;
+    public Node foundNode;
 
     //coordinates of currently processing node
-    public int xcoord = 500, ycoord = 10;
+    public int xcoord = 500, ycoord = 50;
 
     //component declaration
     JTextField number = new JTextField(20);
     JButton insert = new JButton("Insert Value");
+    JButton delete = new JButton("Delete Value");
+    JButton reset = new JButton("Reset Tree");
+    JButton find = new JButton("Find Node");
     JPanel addno = new JPanel();
     JFrame f;
 
@@ -37,9 +44,12 @@ public class BinarySearchTree {
         drawStuff canvas = new drawStuff();
         canvas.setPreferredSize(new Dimension(1000, 1000));
         f = new JFrame();
-        f.setLayout(new FlowLayout());
+        f.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
         addno.add(number);
         addno.add(insert);
+        addno.add(delete);
+        addno.add(reset);
+        addno.add(find);
         f.add(canvas);
         f.add(addno);
 
@@ -49,7 +59,50 @@ public class BinarySearchTree {
             public void actionPerformed(ActionEvent ae) {
                 b.insert(Integer.parseInt(number.getText()));
                 canvas.rootset(root);
+                number.setText("");
                 canvas.repaint();
+            }
+        });
+
+        delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                b.delete(Integer.parseInt(number.getText()));
+                canvas.rootset(root);
+                number.setText("");
+
+                canvas.repaint();
+            }
+        });
+
+        number.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == 10) {
+                    b.insert(Integer.parseInt(number.getText()));
+                    canvas.rootset(root);
+                    number.setText("");
+                    canvas.repaint();
+                }
+            }
+
+        });
+
+        reset.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                root = null;
+                canvas.repaint();
+            }
+        });
+
+        find.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if (find(Integer.parseInt(number.getText()))) {
+                    found = true;
+                    canvas.getfound(found, foundNode);
+                }
             }
         });
 
@@ -65,6 +118,7 @@ public class BinarySearchTree {
         Node current = root;
         while (current != null) {
             if (current.data == id) {
+                foundNode = current;
                 return true;
             } else if (current.data > id) {
                 current = current.left;
@@ -107,6 +161,7 @@ public class BinarySearchTree {
         else if (current.right == null) {
             if (current == root) {
                 root = current.left;
+
             } else if (isLeftChild) {
                 parent.left = current.left;
             } else {
@@ -133,6 +188,8 @@ public class BinarySearchTree {
             }
             successor.left = current.left;
         }
+
+        updatexy();
         return true;
     }
 
@@ -174,8 +231,8 @@ public class BinarySearchTree {
                 current = current.left;
                 if (current == null) {
                     parent.left = newNode;
-                    newNode.Nx = parent.Nx - 50;
-                    newNode.Ny = parent.Ny + 20;
+                    newNode.Nx = parent.Nx - 60;
+                    newNode.Ny = parent.Ny + 50;
 //                    f.add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
                     return;
                 }
@@ -183,8 +240,8 @@ public class BinarySearchTree {
                 current = current.right;
                 if (current == null) {
                     parent.right = newNode;
-                    newNode.Nx = parent.Nx + 50;
-                    newNode.Ny = parent.Ny + 20;
+                    newNode.Nx = parent.Nx + 60;
+                    newNode.Ny = parent.Ny + 50;
 //                    add(new Circle(newNode.Nx + 25, newNode.Ny + 25, newNode.data));
                     return;
                 }
@@ -242,6 +299,27 @@ public class BinarySearchTree {
 //        b.display(root);
     }
 
+    void updatexy() {
+        Stack<Node> nodestack = new Stack<>();
+        nodestack.push(root);
+        while (nodestack.isEmpty() == false) {
+            Node mynode = nodestack.peek();
+
+            if (mynode.right != null) {
+                mynode.right.Nx = mynode.Nx + 60;
+                mynode.right.Ny = mynode.Ny + 50;
+                nodestack.push(mynode.right);
+            }
+
+            if (mynode.left != null) {
+                mynode.left.Nx = mynode.Nx - 60;
+                mynode.right.Ny = mynode.Ny + 50;
+                nodestack.push(mynode.left);
+            }
+
+            nodestack.pop();
+        }
+    }
 }
 
 class Node {
@@ -261,30 +339,53 @@ class Node {
 class drawStuff extends JPanel {
 
     Node drawroot;
-    Stack<Node> nodestack = new Stack<Node>();
+    boolean check;
+    Node foundval;
+    Stack<Node> nodestack = new Stack<>();
 
     void rootset(Node root) {
         drawroot = root;
         nodestack.push(drawroot);
     }
 
+    void getfound(boolean found, Node foundNode) {
+        check = found;
+        foundval = foundNode;
+    }
+
     @Override
     public void paintComponent(Graphics g) {
-        System.out.println("Hello");
+        super.paintComponent(g);
+//        System.out.println("Hello");
         while (nodestack.isEmpty() == false) {
             //print the number on screen
             Node mynode = nodestack.peek();
+            g.setColor(Color.yellow);
+            g.fillOval(mynode.Nx - 20, mynode.Ny - 27, 50, 50);
+            g.setColor(Color.BLACK);
             g.drawString(Integer.toString(mynode.data), mynode.Nx, mynode.Ny);
             nodestack.pop();
 
-            if (mynode.right != null) {
-                nodestack.push(mynode.right);
-                
-            }
-            
             if (mynode.left != null) {
                 nodestack.push(mynode.left);
             }
+
+            if (mynode.right != null) {
+                nodestack.push(mynode.right);
+            }
+
+//            if (mynode.left != null) {
+//                nodestack.push(mynode.left);
+//            }
+        }
+
+        if (check == true) {
+            System.out.println(check+" "+foundval.data);
+            g.setColor(Color.RED);
+            g.drawString("Hello testing", 300, 300);
+            g.drawOval(foundval.Nx - 20, foundval.Ny - 27, 51, 51);
+            check = false;
+            repaint();
         }
     }
 }
