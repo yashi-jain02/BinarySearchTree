@@ -27,9 +27,9 @@ public class BinarySearchTree {
     public Node foundNode;
 
     //coordinates of currently processing node
-    public int xcoord = 500, ycoord = 50;
+    public int xcoord = 500, ycoord = 100;
     String toDisplay = "";
-    
+
     //component declaration
     JTextField number = new JTextField(20);
     JTextField printfield = new JTextField();
@@ -50,7 +50,7 @@ public class BinarySearchTree {
         drawStuff canvas = new drawStuff();
         canvas.setPreferredSize(new Dimension(1000, 1000));
         f = new JFrame();
-        f.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+//        f.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
         mypanel.add(number);
         buttongroup.add(insert);
         buttongroup.add(delete);
@@ -63,8 +63,8 @@ public class BinarySearchTree {
         printfield.setEditable(false);
         mypanel.add(printfield);
 
-        f.add(canvas);
-        f.add(mypanel);
+        f.add(canvas, BorderLayout.CENTER);
+        f.add(mypanel, BorderLayout.NORTH);
 
         //Listeners
         insert.addActionListener(new ActionListener() {
@@ -105,6 +105,8 @@ public class BinarySearchTree {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 display(root);
+                printfield.setText(toDisplay);
+                toDisplay = "";
             }
         });
 
@@ -114,6 +116,9 @@ public class BinarySearchTree {
                 if (find(Integer.parseInt(number.getText()))) {
                     found = true;
                     canvas.getfound(found, foundNode);
+                    System.out.println(found + " of listener");
+                    found = false;
+                    canvas.repaint();
                 }
             }
         });
@@ -269,6 +274,7 @@ public class BinarySearchTree {
         if (root != null) {
             display(root.left);
             System.out.print(" " + root.data);
+            toDisplay = toDisplay + " " + root.data;
             display(root.right);
 
             //MY CODE
@@ -376,7 +382,9 @@ class drawStuff extends JPanel {
 
     void getfound(boolean found, Node foundNode) {
         check = found;
+        System.out.println(found + "of getfound");
         foundval = foundNode;
+        System.out.println(foundval.data);
     }
 
     @Override
@@ -386,10 +394,21 @@ class drawStuff extends JPanel {
         while (nodestack.isEmpty() == false) {
             //print the number on screen
             Node mynode = nodestack.peek();
-            g.setColor(Color.yellow);
-            g.fillOval(mynode.Nx - 20, mynode.Ny - 27, 50, 50);
-            g.setColor(Color.BLACK);
-            g.drawString(Integer.toString(mynode.data), mynode.Nx, mynode.Ny);
+            System.out.println("check = " + check);
+            if (check) {
+                System.out.println("I'm here with " + foundval.data + " and " + mynode.data);
+                if (foundval.data == mynode.data) {
+                    g.setColor(Color.green);
+                    g.fillOval(mynode.Nx - 20, mynode.Ny - 27, 50, 50);
+                    g.setColor(Color.BLACK);
+                    g.drawString(Integer.toString(mynode.data), mynode.Nx, mynode.Ny);
+                }
+            } else {
+                g.setColor(Color.yellow);
+                g.fillOval(mynode.Nx - 20, mynode.Ny - 27, 50, 50);
+                g.setColor(Color.BLACK);
+                g.drawString(Integer.toString(mynode.data), mynode.Nx, mynode.Ny);
+            }
             nodestack.pop();
 
             if (mynode.left != null) {
@@ -407,13 +426,5 @@ class drawStuff extends JPanel {
 //            }
         }
 
-        if (check == true) {
-            System.out.println(check + " " + foundval.data);
-            g.setColor(Color.RED);
-            g.drawString("Hello testing", 300, 300);
-            g.drawOval(foundval.Nx - 20, foundval.Ny - 27, 51, 51);
-            check = false;
-            repaint();
-        }
     }
 }
