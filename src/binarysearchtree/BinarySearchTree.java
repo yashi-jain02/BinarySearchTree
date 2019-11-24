@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/*in delete func reduce no. of nodes*/
 package binarysearchtree;
 
 import java.awt.*;
@@ -37,8 +38,11 @@ public class BinarySearchTree {
     JButton delete = new JButton("Delete Value");
     JButton print = new JButton("Print Tree");
     JButton find = new JButton("Find Node");
+    JButton Height=new JButton("Height of tree");
+    JButton noOfNodes=new JButton("No. of nodes");
     JPanel buttongroup = new JPanel();
     JPanel mypanel = new JPanel();
+    JPanel lastpanel=new JPanel();
     JFrame f;
 
     public static Node root;
@@ -59,13 +63,16 @@ public class BinarySearchTree {
         buttongroup.setLayout(new GridLayout(2, 2));
         mypanel.add(buttongroup);
         mypanel.setLayout(new GridLayout(3, 1));
+        
+        lastpanel.add(Height);
+        lastpanel.add(noOfNodes);
 
         printfield.setEditable(false);
         mypanel.add(printfield);
 
         f.add(canvas, BorderLayout.CENTER);
         f.add(mypanel, BorderLayout.NORTH);
-
+        f.add(lastpanel,BorderLayout.SOUTH);
         //Listeners
         insert.addActionListener(new ActionListener() {
             @Override
@@ -109,7 +116,19 @@ public class BinarySearchTree {
                 toDisplay = "";
             }
         });
-
+        find.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                if (find(Integer.parseInt(number.getText())))
+                
+                 printfield.setText("Number found");
+                else
+                    printfield.setText("Number not found");
+              
+            }
+        });
+        
+        /*
         find.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -120,6 +139,25 @@ public class BinarySearchTree {
                     found = false;
                     canvas.repaint();
                 }
+            }
+        });*/
+           Height.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                int h=getheight(root);
+                String s=String.valueOf(h);
+                 printfield.setText(s);
+              
+            }
+        });
+            noOfNodes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                
+                
+                String s=String.valueOf(nodeCount);
+                 printfield.setText(s);
+              
             }
         });
 
@@ -235,6 +273,7 @@ public class BinarySearchTree {
 
     public void insert(int id) {
         Node newNode = new Node(id);
+        nodeCount++;
         if (root == null) {
             root = newNode;
             root.Nx = 500;
@@ -428,3 +467,4 @@ class drawStuff extends JPanel {
 
     }
 }
+
